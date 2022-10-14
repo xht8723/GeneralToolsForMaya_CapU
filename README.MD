@@ -1,2 +1,2 @@
 # Smart Camera Placement
-## An Autodesk maya script
+## An Autodesk Maya script
