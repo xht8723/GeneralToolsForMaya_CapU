@@ -1,3 +1,4 @@
+from ctypes import alignment
 import sys
 from PySide2 import QtCore, QtWidgets, QtGui
 import maya.cmds as cmds
@@ -18,6 +19,7 @@ def lsAll(targetType = MESH):
         return camList
     meshList = cmds.ls(exactType = MESH)
     return meshList
+
 
 #------------------------------------------------------------------------------------------------------
 #Utility function that take a list of shapes and return a list of their corresponding transforms.
@@ -48,46 +50,38 @@ class SCPmain(QtWidgets.QWidget):
         super().__init__()
 
         self.setWindowTitle("Smart Camera Placement")
-        #creating tabs layout
-        tabs = QtWidgets.QTabWidget()
-        animationTab = QtWidgets.QWidget()
-        riggingTab = QtWidgets.QWidget()
-        modelingTab = QtWidgets.QWidget()
-        tabs.addTab(riggingTab, "Rigging")
-        tabs.addTab(animationTab, "Animation")
-        tabs.addTab(modelingTab, "Modeling")
         
         #Widgets
-        self.POIText = QtWidgets.QLabel("Select a mesh as point of interest: ")
+        self.meshText = QtWidgets.QLabel("Select a mesh as point of interest: ")
         self.meshList = QtWidgets.QComboBox()
         self.meshList.setToolTip('What did the modeler say to the psychologist? \n"My life is a mesh!"')
-
 
         self.compoText = QtWidgets.QLabel("Select the composition rule: \nWIP")
         self.compositionList = QtWidgets.QComboBox()
         self.compositionList.setToolTip('What have Illuminati and Golden Ration in common?\n"They are both a myth..."')
 
-
         self.camText = QtWidgets.QLabel("Select camera: ")
         self.camList = QtWidgets.QComboBox()
         self.camList.setToolTip("I accidentally washed my father's camera's memory card. He's furious because now all the images are watermarked.")
-
+        self.camText1 = QtWidgets.QLabel("Select camera: ")
+        self.camList1 = QtWidgets.QComboBox()
+        self.camList1.setToolTip("I accidentally washed my father's camera's memory card. He's furious because now all the images are watermarked.")
 
         self.startButton = QtWidgets.QPushButton("Smart placement (WIP)")
         self.startButton.setToolTip("Auto place the camera to the best place according to the settings.")
 
-
         self.rigCamButton = QtWidgets.QPushButton("Rig the camera")
         self.rigCamButton.setToolTip("Setup a basic rig to the selected camera. \n Works with an aim camera.")
-
+        self.rigCamButton.released.connect(self.doCameraRig)
 
         self.easyCutButton = QtWidgets.QPushButton("Easy Camera Cut (WIP)")
         self.easyCutButton.setToolTip("Create a cut for selected camera and give it a translate keyframe at perspective camera's current position. \nWIP")
 
-
         self.refreshButton = QtWidgets.QPushButton("Refresh dropdown lists")
         self.refreshButton.setToolTip("Refreshment means snacks.\nSo refresh must have meaning of eating.\nBut click this won't get you any cookies.")
+        self.refreshButton.released.connect(self.initializeComboBox)
 
+        self.controllerText = QtWidgets.QLabel("Create nurbs curve:")
         self.arrow180Button = QtWidgets.QPushButton("Arrow 180")
         self.arrow180Button.released.connect(self.arrow180)
         self.arrow360Button = QtWidgets.QPushButton("Arrow 360")
@@ -143,67 +137,68 @@ class SCPmain(QtWidgets.QWidget):
         self.bulbButton = QtWidgets.QPushButton("Bulb")
 
 
+        #creating tabs
+        tabs = QtWidgets.QTabWidget()
+        animationTab = QtWidgets.QWidget()
+        riggingTab = QtWidgets.QWidget()
+        modelingTab = QtWidgets.QWidget()
+        tabs.addTab(riggingTab, "Rigging")
+        tabs.addTab(animationTab, "Animation")
+        tabs.addTab(modelingTab, "Modeling")
 
 
-        #Layouts
-        hLayoutCompo = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignHCenter)
-        hLayoutPOI = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignHCenter)
+        #Rigging tab Layout
+        vRiggingLayout = QtWidgets.QVBoxLayout(alignment = QtCore.Qt.AlignCenter)
+        hRiggingLayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
 
-        
-        # hLayoutCompo.addWidget(self.compoText)
-        # hLayoutCompo.addWidget(self.compositionList)
-
-        # hLayoutPOI.addWidget(self.POIText)
-        # hLayoutPOI.addWidget(self.meshList)
-
-        # hLayoutCam.addWidget(self.camText)
-        # hLayoutCam.addWidget(self.camList)
-        # hLayoutCam.addWidget(self.rigCamButton)
-        # hLayoutCam.addWidget(self.easyCutButton)
-        # self.rigCamButton.released.connect(self.doCameraRig)
-
-        #Tabs Layout
-        riggingTab.layout = QtWidgets.QVBoxLayout()
-        riggingTab.layout.addWidget(self.camText)
-        riggingTab.layout.addWidget(self.camList)
-        riggingTab.layout.addWidget(self.rigCamButton)
-
-        hRiggingLayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignHCenter)
         hRiggingLayout.addWidget(self.camText)
         hRiggingLayout.addWidget(self.camList)
         hRiggingLayout.addWidget(self.rigCamButton)
-        # hRiggingLayout.addWidget(self.arrow180Button)
-        # hRiggingLayout.addWidget(self.arrow360Button)
-        # hRiggingLayout.addWidget(self.arrowBeltButton)
-        # hRiggingLayout.addWidget(self.arrowBowlButton)
 
-        controllerLayout = QtWidgets.QVBoxLayout()
-        controllerLayout.addWidget(self.arrow180Button)
-        controllerLayout.addWidget(self.arrow360Button)
-        controllerLayout.addWidget(self.arrowBeltButton)
-        controllerLayout.addWidget(self.arrowBowlButton)
+        controllerLayout = QtWidgets.QGridLayout()
+        controllerLayout.addWidget(self.controllerText, 0, 0, alignment = QtCore.Qt.AlignBottom)
+        controllerLayout.addWidget(self.arrow180Button, 1, 0)
+        controllerLayout.addWidget(self.arrow360Button, 1, 1)
+        controllerLayout.addWidget(self.arrowBeltButton, 1, 2)
+        controllerLayout.addWidget(self.arrowBowlButton, 1, 3)
+        controllerLayout.setContentsMargins(0,50,0,0)
 
-        # riggingTab.setLayout(hRiggingLayout)
-        # riggingTab.layout.addLayout(controllerLayout)
+        vRiggingLayout.addLayout(hRiggingLayout)
+        vRiggingLayout.addLayout(controllerLayout)
+
+        riggingTab.setLayout(vRiggingLayout)
 
 
+        #Animation tab Layout
+        vAnimationLayout = QtWidgets.QVBoxLayout(alignment = QtCore.Qt.AlignCenter)
+        hAnimationLayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
+
+        hAnimationLayout.addWidget(self.camText1, alignment = QtCore.Qt.AlignRight)
+        hAnimationLayout.addWidget(self.camList1)
+        hAnimationLayout.addWidget(self.easyCutButton)
+
+        animationTab.setLayout(hAnimationLayout)
+
+
+        #Modeling tab Layout
+        vModelingLayout = QtWidgets.QVBoxLayout(alignment = QtCore.Qt.AlignCenter)
+        hModelingLayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
+
+        hModelingLayout.addWidget(self.meshText, alignment = QtCore.Qt.AlignRight)
+        hModelingLayout.addWidget(self.meshList)
+
+        modelingTab.setLayout(hModelingLayout)
+
+        
+        #Main Layout
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(tabs)
-        # self.layout.addLayout(hLayoutCam)
-        # self.layout.addLayout(hLayoutPOI)
-        # self.layout.addLayout(hLayoutCompo)
-        # self.layout.addWidget(self.refreshButton)
-        # self.refreshButton.released.connect(self.initializeComboBox)
-        # self.layout.addWidget(self.startButton)
-        # self.startButton.released.connect(self.SmartCamera)
+        self.layout.addWidget(self.refreshButton)
         
-
-        
-        #Updates dropList items
+        #Add dropList items
         self.initializeComboBox()
         
         
-    
 
 #------------------------------------------------------------------------------------------------------
     #A class function updates all the combobox.
@@ -212,6 +207,7 @@ class SCPmain(QtWidgets.QWidget):
     def initializeComboBox(self):
         self.meshList.clear()
         self.camList.clear()
+        self.camList1.clear()
         self.compositionList.clear()
 
         self.compositionList.addItem("Rule of 3rd")
@@ -225,8 +221,8 @@ class SCPmain(QtWidgets.QWidget):
         lsOfCam = lsAll(CAM)
         for cam in lsOfCam:
             self.camList.addItem(cam)
+            self.camList1.addItem(cam)
         return
-
 
 
 #------------------------------------------------------------------------------------------------------
@@ -262,21 +258,14 @@ class SCPmain(QtWidgets.QWidget):
 
         cmds.rotate(90, 0, 0, [outerEmpty, midEmpty, innerEmpty])
 
-
         cmds.parent(midEmpty, outerLayer)
         cmds.parent(innerEmpty, midLayer)
         # cmds.parent(aimEmpty, innerLayer)
-
         # cmds.aimConstraint(aimLocator, selectedCam)
-
-
         cmds.parent(selectedCam, innerLayer)
-
-
 
         return
     
-
 
 #------------------------------------------------------------------------------------------------------
 #Algorithm for smart camera placement.
@@ -284,6 +273,7 @@ class SCPmain(QtWidgets.QWidget):
     def SmartCamera(self):
         #god i haven't done math for so long...
         return
+
 
 #------------------------------------------------------------------------------------------------------
 #Functions to create curves.
@@ -301,14 +291,10 @@ class SCPmain(QtWidgets.QWidget):
         return cmds.curve(d=1, p = [(5.431172424626894, 1.72981783677632, 0.03445487012004378), (3.620781616417929, 3.5402086449852845, 0.03445487012004378), (3.620781616417929, 3.5402086449852845, 0.03445487012004378), (9.051954041044837, 3.5402086449852845, 0.034454870120050884), (9.051954041044837, 3.5402086449852845, 0.034454870120050884), (9.051954041044837, -1.8909637796416092, 0.034454870120050884), (9.051954041044837, -1.8909637796416092, 0.034454870120050884), (7.2415632328358654, -0.08057297143264464, 0.03445487012004378), (7.2415632328358654, -0.08057297143264464, 0.03445487012004378), (3.982859839365048, -2.7031013420313315, 0.03445487012004378), (0.0, -3.5402086449852845, 0.03445487012004378), (-3.982859839365048, -2.7031013420313315, 0.03445487012004378), (-7.2415632328358726, -0.08057297143264464, 0.034454870120036674), (-7.2415632328358726, -0.08057297143264464, 0.034454870120036674), (-9.051954041044837, -1.8909637796416092, 0.034454870120036674), (-9.051954041044837, -1.8909637796416092, 0.034454870120036674), (-9.051954041044837, 3.5402086449852845, 0.034454870120036674), (-9.051954041044837, 3.5402086449852845, 0.034454870120036674), (-3.6207816164179434, 3.5402086449852845, 0.034454870120036674), (-3.6207816164179434, 3.5402086449852845, 0.034454870120036674), (-5.431172424626908, 1.72981783677632, 0.034454870120036674), (-5.431172424626908, 1.72981783677632, 0.034454870120036674), (-3.4518118829398077, -0.19943621886513085, 0.03445487012004378), (0.0, -1.112936895600967, 0.03445487012004378), (3.4518118829398077, -0.19943621886513085, 0.03445487012004378), (5.431172424626894, 1.72981783677632, 0.03445487012004378), (0.02398843417912211, 1.72981783677632, 5.431172424626901), (0.023988434179115004, 3.5402086449852845, 3.620781616417929), (0.023988434179115004, 3.5402086449852845, 3.620781616417929), (0.023988434179120333, 3.5402086449852845, 9.051954041044837), (0.023988434179120333, 3.5402086449852845, 9.051954041044837), (0.023988434179120333, -1.8909637796416092, 9.051954041044837), (0.023988434179120333, -1.8909637796416092, 9.051954041044837), (0.023988434179120333, -0.08057297143264464, 7.2415632328358726), (0.023988434179120333, -0.08057297143264464, 7.2415632328358726), (0.02398843417912211, -2.7031013420313315, 3.982859839365048), (0.023988434179123885, -3.5402086449852845, 0.0), (0.023988434179118556, -2.7031013420313315, -3.982859839365048), (0.023988434179120333, -0.08057297143264464, -7.2415632328358654), (0.023988434179120333, -0.08057297143264464, -7.2415632328358654), (0.023988434179120333, -1.8909637796416092, -9.051954041044837), (0.023988434179120333, -1.8909637796416092, -9.051954041044837), (0.023988434179120333, 3.5402086449852845, -9.051954041044837), (0.023988434179120333, 3.5402086449852845, -9.051954041044837), (0.023988434179118556, 3.5402086449852845, -3.6207816164179363), (0.023988434179118556, 3.5402086449852845, -3.6207816164179363), (0.023988434179118556, 1.72981783677632, -5.431172424626894), (0.023988434179118556, 1.72981783677632, -5.431172424626894), (0.023988434179118556, -0.19943621886513085, -3.4518118829398077), (0.02398843417911678, -1.112936895600967, 0.0), (0.02398843417912211, -0.19943621886513085, 3.4518118829398077), (0.02398843417912211, 1.72981783677632, 5.431172424626901)])
  
 
-
-
-
 #------------------------------------------------------------------------------------------------------
 #Initialize menu window
 #------------------------------------------------------------------------------------------------------
 widget = SCPmain()
-widget.resize(600, 600)
 widget.show()
 
 
