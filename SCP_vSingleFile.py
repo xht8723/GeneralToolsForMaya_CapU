@@ -3,8 +3,8 @@ import os
 import sys
 from PySide2 import QtCore, QtWidgets, QtGui
 import maya.cmds as cmds
-import utilities as ut
-import curves as cur
+from . import utilities as ut
+from . import curves as cur
 
 
 MESH = "mesh"  #maya node name const
@@ -47,7 +47,7 @@ class SCPmain(QtWidgets.QWidget):
 
         self.rigCamButton = QtWidgets.QPushButton("Rig the camera")
         self.rigCamButton.setToolTip("Setup a basic rig to the selected camera. \n Works with an aim camera.")
-        self.rigCamButton.released.connect(ut.doCameraRig)
+        self.rigCamButton.released.connect(self.doCameraRig)
 
         self.easyCutButton = QtWidgets.QPushButton("Easy Camera Cut (WIP)")
         self.easyCutButton.setToolTip("Create a cut for selected camera and give it a translate keyframe at perspective camera's current position. \nWIP")
@@ -312,6 +312,14 @@ class SCPmain(QtWidgets.QWidget):
             self.camList.addItem(cam)
             self.camList1.addItem(cam)
         return
+
+
+#------------------------------------------------------------------------------------------------------
+    #get current camera selection
+    #Return camera
+#------------------------------------------------------------------------------------------------------
+    def doCameraRig(self):
+        return ut.U_CameraRig(self.camList.currentText())
 
 #------------------------------------------------------------------------------------------------------
 #Algorithm for create a turn table
