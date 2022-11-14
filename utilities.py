@@ -43,7 +43,19 @@ def selectAll(targetType = MESH):
 
 
 #------------------------------------------------------------------------------------------------------
-    #A class function that builds a camera rig on selected camera.
+    #Create an empty group to zero out channels of selected object
+    #Return Void
+#------------------------------------------------------------------------------------------------------
+def zeroOut():
+    sl = cmds.ls(selection = 1)[0]
+    emp = cmds.group(em = 1, n = sl + "Os")
+    cmds.matchTransform(emp, sl)
+    cmds.parent(sl, emp)
+    return
+
+
+#------------------------------------------------------------------------------------------------------
+    #A function that builds a camera rig on selected camera.
     #Return Void
 #------------------------------------------------------------------------------------------------------
 def U_CameraRig(cam):

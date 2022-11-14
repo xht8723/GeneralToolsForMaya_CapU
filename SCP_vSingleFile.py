@@ -55,6 +55,9 @@ class SCPmain(QtWidgets.QWidget):
         self.turnTableButton = QtWidgets.QPushButton("Make a turn table of your model")
         self.turnTableButton.released.connect(self.turnTable)
 
+        self.zeroOutButton = QtWidgets.QPushButton("Zero out selected object")
+        self.zeroOutButton.released.connect(ut.zeroOut)
+
         self.refreshButton = QtWidgets.QPushButton("Refresh dropdown lists")
         self.refreshButton.setToolTip("Refreshment means snacks.\nSo refresh must have meaning of eating.\nBut click this won't get you any cookies.")
         self.refreshButton.released.connect(self.initializeComboBox)
@@ -179,6 +182,8 @@ class SCPmain(QtWidgets.QWidget):
         hRiggingLayout.addWidget(self.camText)
         hRiggingLayout.addWidget(self.camList)
         hRiggingLayout.addWidget(self.rigCamButton)
+
+        hRiggingLayout.addWidget(self.zeroOutButton)
 
         controllerLayout = QtWidgets.QGridLayout()
         controllerLayout.addWidget(self.controllerText, 0, 0, alignment = QtCore.Qt.AlignBottom)
