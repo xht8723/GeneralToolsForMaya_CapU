@@ -183,8 +183,6 @@ class SCPmain(QtWidgets.QWidget):
         hRiggingLayout.addWidget(self.camList)
         hRiggingLayout.addWidget(self.rigCamButton)
 
-        hRiggingLayout.addWidget(self.zeroOutButton)
-
         controllerLayout = QtWidgets.QGridLayout()
         controllerLayout.addWidget(self.controllerText, 0, 0, alignment = QtCore.Qt.AlignBottom)
         controllerLayout.addWidget(self.arrow180Button, 1, 0)
@@ -247,10 +245,12 @@ class SCPmain(QtWidgets.QWidget):
         controllerLayout.addWidget(self.wireTransformButton, 10, 3)
         controllerLayout.addWidget(self.bulbButton, 10, 4)
 
-        controllerLayout.setContentsMargins(0,50,0,0)
+        controllerLayout.setContentsMargins(0,50,0,50)
 
         vRiggingLayout.addLayout(hRiggingLayout)
         vRiggingLayout.addLayout(controllerLayout)
+
+        vRiggingLayout.addWidget(self.zeroOutButton, alignment = QtCore.Qt.AlignCenter)
 
         riggingTab.setLayout(vRiggingLayout)
 
@@ -287,7 +287,7 @@ class SCPmain(QtWidgets.QWidget):
         #Main Layout
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(tabs)
-        self.layout.addWidget(self.refreshButton)
+        self.layout.addWidget(self.refreshButton, alignment = QtCore.Qt.AlignCenter)
         
         #Add dropList items
         self.initializeComboBox()

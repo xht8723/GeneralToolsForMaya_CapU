@@ -1,4 +1,7 @@
 from . import SCP_vSingleFile as scp
+import imp
+
+imp.reload(scp)
 
 #------------------------------------------------------------------------------------------------------
 #Initialize menu window
