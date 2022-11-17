@@ -332,8 +332,6 @@ class SCPmain(QtWidgets.QWidget):
     def turnTable(self):
         POI = self.meshList.currentText()
         cam = self.camList2.currentText()
-
-        
         return
 
 #--------------------------------------script over---------------------------------------------
