@@ -5,6 +5,7 @@ from PySide2 import QtCore, QtWidgets, QtGui
 import maya.cmds as cmds
 from . import utilities as ut
 from . import curves as cur
+from . import triPlaner
 
 
 MESH = "mesh"  #maya node name const
@@ -22,6 +23,7 @@ class SCPmain(QtWidgets.QWidget):
 
         self.setWindowTitle("Smart Camera Placement")
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowStaysOnTopHint)
+        self.triWindow = triPlaner.tri()
         
         #Widgets
         self.meshText = QtWidgets.QLabel("Select a mesh as point of interest: ")
@@ -52,11 +54,17 @@ class SCPmain(QtWidgets.QWidget):
         self.easyCutButton = QtWidgets.QPushButton("Easy Camera Cut (WIP)")
         self.easyCutButton.setToolTip("Create a cut for selected camera and give it a translate keyframe at perspective camera's current position. \nWIP")
 
+        self.openTriButton = QtWidgets.QPushButton("Triplaner setup")
+        self.openTriButton.released.connect(self.openTri)
+
         self.turnTableButton = QtWidgets.QPushButton("Make a turn table of your model")
         self.turnTableButton.released.connect(self.turnTable)
 
         self.zeroOutButton = QtWidgets.QPushButton("Zero out selected object")
         self.zeroOutButton.released.connect(ut.zeroOut)
+
+        self.matchTransButton = QtWidgets.QPushButton("Match Transform")
+        self.matchTransButton.released.connect(ut.matchTransform)
 
         self.refreshButton = QtWidgets.QPushButton("Refresh dropdown lists")
         self.refreshButton.setToolTip("Refreshment means snacks.\nSo refresh must have meaning of eating.\nBut click this won't get you any cookies.")
@@ -251,6 +259,8 @@ class SCPmain(QtWidgets.QWidget):
         vRiggingLayout.addLayout(controllerLayout)
 
         vRiggingLayout.addWidget(self.zeroOutButton, alignment = QtCore.Qt.AlignCenter)
+        vRiggingLayout.addWidget(self.matchTransButton, alignment = QtCore.Qt.AlignCenter)
+
 
         riggingTab.setLayout(vRiggingLayout)
 
@@ -271,12 +281,15 @@ class SCPmain(QtWidgets.QWidget):
         hModelingLayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
         hModelingLayout2 = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
 
+
+
         hModelingLayout.addWidget(self.meshText, alignment = QtCore.Qt.AlignRight)
         hModelingLayout.addWidget(self.meshList)
 
         hModelingLayout2.addWidget(self.camText2, alignment = QtCore.Qt.AlignRight)
         hModelingLayout2.addWidget(self.camList2)
 
+        vModelingLayout.addWidget(self.openTriButton, alignment = QtCore.Qt.AlignCenter)
         vModelingLayout.addLayout(hModelingLayout)
         vModelingLayout.addLayout(hModelingLayout2)
         vModelingLayout.addWidget(self.turnTableButton)
@@ -302,6 +315,7 @@ class SCPmain(QtWidgets.QWidget):
         self.meshList.clear()
         self.camList.clear()
         self.camList1.clear()
+        self.camList2.clear()
         self.compositionList.clear()
 
         self.compositionList.addItem("Rule of 3rd")
@@ -316,6 +330,7 @@ class SCPmain(QtWidgets.QWidget):
         for cam in lsOfCam:
             self.camList.addItem(cam)
             self.camList1.addItem(cam)
+            self.camList2.addItem(cam)
         return
 
 
@@ -327,11 +342,22 @@ class SCPmain(QtWidgets.QWidget):
         return ut.U_CameraRig(self.camList.currentText())
 
 #------------------------------------------------------------------------------------------------------
-#Algorithm for create a turn table
+    #pass parameters to utility function: doturntable
 #------------------------------------------------------------------------------------------------------
     def turnTable(self):
         POI = self.meshList.currentText()
         cam = self.camList2.currentText()
+        ut.doTurnTable(cam, POI)
         return
+
+
+#------------------------------------------------------------------------------------------------------
+    #open the triplaner window
+#------------------------------------------------------------------------------------------------------
+    def openTri(self):
+        self.triWindow.show()
+
+
+
 
 #--------------------------------------script over---------------------------------------------

@@ -1,11 +1,14 @@
 import maya.cmds as cmds
 from . import curves as cur
 from . import utilities as ut
+from pathlib import Path
+
 
 
 MESH = "mesh"  #maya node name const
 CAM = "camera" #maya node name const
 TRANSFORM = "transform" #maya node name const
+TURNTABLE = "SCP_turnTable" #turntable mesh name const
 
 
 #------------------------------------------------------------------------------------------------------
@@ -41,7 +44,6 @@ def selectAll(targetType = MESH):
     if targetType != MESH:
         return
 
-
 #------------------------------------------------------------------------------------------------------
     #Create an empty group to zero out channels of selected object
     #Return Void
@@ -53,6 +55,54 @@ def zeroOut():
     cmds.parent(sl, emp)
     return
 
+#------------------------------------------------------------------------------------------------------
+    #Simple match transform with button click
+    #Return Void
+#------------------------------------------------------------------------------------------------------
+def matchTransform():
+    from_ = cmds.ls(selection = 1)[0]
+    to_ = cmds.ls(selection = 1)[1]
+    cmds.matchTransform(from_, to_)
+    return
+
+#------------------------------------------------------------------------------------------------------
+    #Import the file in the path
+    #Return name of the file
+#------------------------------------------------------------------------------------------------------
+def importModel(path):
+    return cmds.file(path, i = 1, mnc = 1)
+    
+#------------------------------------------------------------------------------------------------------
+    #Create a turntable of selected model and camera
+    #Return name of the file
+#------------------------------------------------------------------------------------------------------
+def doTurnTable(cam, target):
+    tablePath = __file__
+    tablePath = tablePath.replace("utilities.py", "SCP_turnTable_mesh.fbx")
+    importModel(tablePath)
+
+    tgtBBox = cmds.exactWorldBoundingBox(target)
+    minX = tgtBBox[0]
+    minY = tgtBBox[1]
+    minZ = tgtBBox[2]
+    maxX = tgtBBox[3]
+    maxY = tgtBBox[4]
+    maxZ = tgtBBox[5]
+
+    midX = tgtBBox[3] - tgtBBox[0]
+    midY = tgtBBox[4] - tgtBBox[1]
+    midZ = tgtBBox[5] - tgtBBox[2]
+
+    cmds.setAttr(TURNTABLE+".translateX", minX + midX/2)
+    cmds.setAttr(TURNTABLE+".translateY", minY - 28)
+    cmds.setAttr(TURNTABLE+".translateZ", minZ + midZ/2)
+
+    U_CameraRig(cam)
+    # cmds.setAttr("Aimer_ctrl"+".translateX", minX + midX/2)
+    # cmds.setAttr("Aimer_ctrl"+".translateY", minY + midY/2)
+    # cmds.setAttr("Aimer_ctrl"+".translateZ", minZ + midZ/2)
+    
+    return
 
 #------------------------------------------------------------------------------------------------------
     #A function that builds a camera rig on selected camera.
