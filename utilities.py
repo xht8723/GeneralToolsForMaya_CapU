@@ -47,7 +47,16 @@ def selectAll(targetType = MESH):
     #Create an empty group to zero out channels of selected object
     #Return Void
 #------------------------------------------------------------------------------------------------------
-def zeroOut():
+def zeroOut(textBox, name = None):
+    if(name != None):
+        sl = cmds.ls(selection = 1)[0]
+        cmds.rename(sl, name)
+        emp = cmds.group(em = 1, n = name + "Os")
+        cmds.matchTransform(emp, name)
+        cmds.parent(name, emp)
+        textBox.clear()
+        return
+
     sl = cmds.ls(selection = 1)[0]
     emp = cmds.group(em = 1, n = sl + "Os")
     cmds.matchTransform(emp, sl)

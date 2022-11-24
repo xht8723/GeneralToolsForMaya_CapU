@@ -63,8 +63,10 @@ class GTCapUmain(QtWidgets.QWidget):
         self.turnTableButton = QtWidgets.QPushButton("Make a turn table of your model")
         self.turnTableButton.released.connect(self.turnTable)
 
+        self.renameText = QtWidgets.QLabel("Rename the curve/empty (or leave it blank):")
+        self.renameZeroOut = QtWidgets.QLineEdit()
         self.zeroOutButton = QtWidgets.QPushButton("Zero out selected object")
-        self.zeroOutButton.released.connect(ut.zeroOut)
+        self.zeroOutButton.released.connect(self.sendRename)
 
         self.matchTransButton = QtWidgets.QPushButton("Match Transform")
         self.matchTransButton.released.connect(ut.matchTransform)
@@ -262,7 +264,11 @@ class GTCapUmain(QtWidgets.QWidget):
         vRiggingLayout.addLayout(hRiggingLayout)
         vRiggingLayout.addLayout(controllerLayout)
 
-        vRiggingLayout.addWidget(self.zeroOutButton, alignment = QtCore.Qt.AlignCenter)
+        renameHlayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
+        renameHlayout.addWidget(self.renameText, alignment = QtCore.Qt.AlignCenter)
+        renameHlayout.addWidget(self.renameZeroOut, alignment = QtCore.Qt.AlignCenter)
+        renameHlayout.addWidget(self.zeroOutButton, alignment = QtCore.Qt.AlignCenter)
+        vRiggingLayout.addLayout(renameHlayout)
         vRiggingLayout.addWidget(self.matchTransButton, alignment = QtCore.Qt.AlignCenter)
 
         riggingTab.setLayout(vRiggingLayout)
@@ -349,6 +355,17 @@ class GTCapUmain(QtWidgets.QWidget):
         POI = self.meshList.currentText()
         cam = self.camList2.currentText()
         ut.doTurnTable(cam, POI)
+        return
+
+#------------------------------------------------------------------------------------------------------
+    #pass parameters to utility function: zeroOut
+#------------------------------------------------------------------------------------------------------
+    def sendRename(self):
+        name = self.renameZeroOut.text()
+        if name != "":
+            ut.zeroOut(self.renameZeroOut, name)
+            return
+        ut.zeroOut(self.renameZeroOut)
         return
 
 #------------------------------------------------------------------------------------------------------
