@@ -7,11 +7,9 @@ from . import utilities as ut
 from . import curves as cur
 from . import triPlaner
 
-
 MESH = "mesh"  #maya node name const
 CAM = "camera" #maya node name const
 TRANSFORM = "transform" #maya node name const
-
 
 #------------------------------------------------------------------------------------------------------
 #main menu window class
