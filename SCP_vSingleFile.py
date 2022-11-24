@@ -57,6 +57,9 @@ class SCPmain(QtWidgets.QWidget):
         self.openTriButton = QtWidgets.QPushButton("Triplaner setup")
         self.openTriButton.released.connect(self.openTri)
 
+        self.delHisButton = QtWidgets.QPushButton("Delete History")
+        self.delHisButton.released.connect(ut.deleteHistory)
+
         self.turnTableButton = QtWidgets.QPushButton("Make a turn table of your model")
         self.turnTableButton.released.connect(self.turnTable)
 
@@ -261,9 +264,7 @@ class SCPmain(QtWidgets.QWidget):
         vRiggingLayout.addWidget(self.zeroOutButton, alignment = QtCore.Qt.AlignCenter)
         vRiggingLayout.addWidget(self.matchTransButton, alignment = QtCore.Qt.AlignCenter)
 
-
         riggingTab.setLayout(vRiggingLayout)
-
 
         #Animation tab Layout
         vAnimationLayout = QtWidgets.QVBoxLayout(alignment = QtCore.Qt.AlignCenter)
@@ -281,15 +282,16 @@ class SCPmain(QtWidgets.QWidget):
         hModelingLayout = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
         hModelingLayout2 = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
 
-
-
         hModelingLayout.addWidget(self.meshText, alignment = QtCore.Qt.AlignRight)
         hModelingLayout.addWidget(self.meshList)
 
         hModelingLayout2.addWidget(self.camText2, alignment = QtCore.Qt.AlignRight)
         hModelingLayout2.addWidget(self.camList2)
 
-        vModelingLayout.addWidget(self.openTriButton, alignment = QtCore.Qt.AlignCenter)
+        vModelingLayout.addWidget(self.openTriButton)
+        vModelingLayout.addWidget(self.delHisButton)
+
+        hModelingLayout.setContentsMargins(0, 50, 0, 0)
         vModelingLayout.addLayout(hModelingLayout)
         vModelingLayout.addLayout(hModelingLayout2)
         vModelingLayout.addWidget(self.turnTableButton)
@@ -305,8 +307,6 @@ class SCPmain(QtWidgets.QWidget):
         #Add dropList items
         self.initializeComboBox()
         
-        
-
 #------------------------------------------------------------------------------------------------------
     #A class function updates all the combobox.
     #Return Void
@@ -350,14 +350,10 @@ class SCPmain(QtWidgets.QWidget):
         ut.doTurnTable(cam, POI)
         return
 
-
 #------------------------------------------------------------------------------------------------------
     #open the triplaner window
 #------------------------------------------------------------------------------------------------------
     def openTri(self):
         self.triWindow.show()
-
-
-
 
 #--------------------------------------script over---------------------------------------------

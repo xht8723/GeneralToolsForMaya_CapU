@@ -4,7 +4,6 @@ from . import utilities as ut
 from pathlib import Path
 
 
-
 MESH = "mesh"  #maya node name const
 CAM = "camera" #maya node name const
 TRANSFORM = "transform" #maya node name const
@@ -73,6 +72,13 @@ def importModel(path):
     return cmds.file(path, i = 1, mnc = 1)
     
 #------------------------------------------------------------------------------------------------------
+    #quick button to delete history
+    #Return name of the file
+#------------------------------------------------------------------------------------------------------
+def deleteHistory():
+    return cmds.delete(ch = 1)
+
+#------------------------------------------------------------------------------------------------------
     #Create a turntable of selected model and camera
     #Return name of the file
 #------------------------------------------------------------------------------------------------------
@@ -96,12 +102,23 @@ def doTurnTable(cam, target):
     cmds.setAttr(TURNTABLE+".translateX", minX + midX/2)
     cmds.setAttr(TURNTABLE+".translateY", minY - 28)
     cmds.setAttr(TURNTABLE+".translateZ", minZ + midZ/2)
-
     U_CameraRig(cam)
-    # cmds.setAttr("Aimer_ctrl"+".translateX", minX + midX/2)
-    # cmds.setAttr("Aimer_ctrl"+".translateY", minY + midY/2)
-    # cmds.setAttr("Aimer_ctrl"+".translateZ", minZ + midZ/2)
-    
+
+
+    tempGroup = cmds.group(em = 1, n = "temp")
+    cmds.setAttr(tempGroup+".translateX", minX + midX/2)
+    cmds.setAttr(tempGroup+".translateY", minY + midY/2)
+    cmds.setAttr(tempGroup+".translateZ", minZ + midZ/2)
+
+    cmds.matchTransform("camera1_OuterLayer_ctrl", tempGroup, pos = 1)
+    cmds.move(midX/2*5, midY/2, midZ/2*5, "camera1_MiddleLayer_ctrl", a = 1)
+
+    cmds.matchTransform("Aimer_ctrl", tempGroup)
+    cmds.delete(tempGroup)
+
+    cmds.setKeyframe("camera1_OuterLayer_ctrl", t = 1, itt = "linear", ott = "linear")
+    cmds.setAttr("camera1_OuterLayer_ctrl.rotateZ", 420)
+    cmds.setKeyframe("camera1_OuterLayer_ctrl", t = 216, itt = "linear", ott = "linear")
     return
 
 #------------------------------------------------------------------------------------------------------
@@ -152,10 +169,10 @@ def U_CameraRig(cam):
     cmds.parent(midEmpty, outerLayer)
     cmds.parent(innerEmpty, midLayer)
     cmds.parent(selectedCam, innerLayer)
-    cmds.parent(locatorEmpty, innerLayer)
+    cmds.parent(locatorEmpty, outerEmpty)
     cmds.parent(bulbEmpty, innerLayer)
 
-    constraint = cmds.aimConstraint(locator, selectedCam, mo = 1)
+    constraint = cmds.aimConstraint(locator, selectedCam, mo = 1, aim = [0, 0, -1])
 
     cmds.select(bulb)
     cmds.addAttr(attributeType = "float", defaultValue = 1.0, softMaxValue = 1.0, softMinValue = 0.0, longName = "Aim_Switch", keyable = 1)
