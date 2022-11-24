@@ -16,7 +16,7 @@ TRANSFORM = "transform" #maya node name const
 #------------------------------------------------------------------------------------------------------
 #main menu window class
 #------------------------------------------------------------------------------------------------------
-class SCPmain(QtWidgets.QWidget):
+class GTCapUmain(QtWidgets.QWidget):
     #constructor
     def __init__(self):
         super().__init__()

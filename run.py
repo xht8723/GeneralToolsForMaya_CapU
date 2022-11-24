@@ -1,4 +1,4 @@
-from . import SCP_vSingleFile as scp
+from . import GTCapU as scp
 from . import triPlaner
 from . import utilities
 from . import curves

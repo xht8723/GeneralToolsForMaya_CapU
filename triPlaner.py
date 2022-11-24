@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 from PySide2 import QtCore, QtWidgets, QtGui
-from . import SCP_vSingleFile as scp
+from . import GTCapU as scp
 
 class tri(QtWidgets.QWidget):
     def __init__(self):
