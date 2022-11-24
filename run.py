@@ -1,10 +1,10 @@
-from . import GTCapU as scp
+from . import GTCapU
 from . import triPlaner
 from . import utilities
 from . import curves
 import imp
 
-imp.reload(scp)
+imp.reload(GTCapU)
 imp.reload(triPlaner)
 imp.reload(utilities)
 imp.reload(curves)
@@ -13,8 +13,8 @@ imp.reload(curves)
 #Initialize menu window
 #------------------------------------------------------------------------------------------------------
 def start():
-    widget = scp.SCPmain()
+    widget = GTCapU.GTCapUmain()
     widget.show()
 
-widget = scp.SCPmain()
+widget = GTCapU.GTCapUmain()
 widget.show()

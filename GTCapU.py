@@ -182,8 +182,9 @@ class GTCapUmain(QtWidgets.QWidget):
         riggingTab = QtWidgets.QWidget()
         modelingTab = QtWidgets.QWidget()
         tabs.addTab(riggingTab, "Rigging")
+        tabs.addTab(modelingTab, "Modeling")
         tabs.addTab(animationTab, "Animation(WIP)")
-        tabs.addTab(modelingTab, "Modeling(WIP)")
+
 
 
         #Rigging tab Layout
