@@ -1,1 +1,1 @@
-scriptToShelf ("GTools","from testTool import run\nimport imp\nimp.reload(run)", false);
+scriptToShelf ("GTools","from GTools import run\nimport imp\nimp.reload(run)", false);
