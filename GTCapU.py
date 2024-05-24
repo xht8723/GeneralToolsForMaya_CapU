@@ -1,7 +1,7 @@
 from ctypes import alignment
 import os
 import sys
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide2 import QtCore, QtWidgets, QtGui
 import maya.cmds as cmds
 from . import utilities as ut
 from . import curves as cur

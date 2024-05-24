@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 import os
 import sys
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide2 import QtCore, QtWidgets, QtGui
 
 class blendColors(QtWidgets.QWidget):
     def __init__(self):
