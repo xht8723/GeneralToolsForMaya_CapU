@@ -49,16 +49,24 @@ def selectAll(targetType = MESH):
 #------------------------------------------------------------------------------------------------------
 def zeroOut(textBox, name = None):
     if(name != None):
-        sl = cmds.ls(selection = 1)[0]
+        try:
+            sl = cmds.ls(selection = 1)[0]
+        except IndexError:
+            cmds.warning('Please select an object')
+            return
         cmds.rename(sl, name)
-        emp = cmds.group(em = 1, n = name + "Os")
+        emp = cmds.group(em = 1, n = name + "_Os")
         cmds.matchTransform(emp, name)
         cmds.parent(name, emp)
         textBox.clear()
         return
 
-    sl = cmds.ls(selection = 1)[0]
-    emp = cmds.group(em = 1, n = sl + "Os")
+    try:
+        sl = cmds.ls(selection = 1)[0]
+    except IndexError:
+        cmds.warning('Please select an object')
+        return
+    emp = cmds.group(em = 1, n = sl + "_Os")
     cmds.matchTransform(emp, sl)
     cmds.parent(sl, emp)
     return
@@ -68,8 +76,12 @@ def zeroOut(textBox, name = None):
     #Return Void
 #------------------------------------------------------------------------------------------------------
 def matchTransform():
-    from_ = cmds.ls(selection = 1)[0]
-    to_ = cmds.ls(selection = 1)[1]
+    try:
+        from_ = cmds.ls(selection = 1)[0]
+        to_ = cmds.ls(selection = 1)[1]
+    except IndexError:
+        cmds.warning('Please select two object that you wanna match transform')
+        return
     cmds.matchTransform(from_, to_)
     return
 
