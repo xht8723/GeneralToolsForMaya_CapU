@@ -12,8 +12,5 @@ imp.reload(curves)
 #------------------------------------------------------------------------------------------------------
 #Initialize menu window
 #------------------------------------------------------------------------------------------------------
-def start():
-    widget = GTCapU.GTCapUmain()
-    widget.show()
-
-start()
+widget = GTCapU.GTCapUmain()
+widget.show()
