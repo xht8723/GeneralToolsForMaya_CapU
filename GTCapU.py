@@ -21,9 +21,8 @@ class GTCapUmain(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Smart Camera Placement")
+        self.setWindowTitle("GTools")
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowStaysOnTopHint)
-        self.triWindow = triPlaner.tri()
         
         #Widgets
         self.meshText = QtWidgets.QLabel("Select a mesh as point of interest: ")
@@ -372,6 +371,7 @@ class GTCapUmain(QtWidgets.QWidget):
     #open the triplaner window
 #------------------------------------------------------------------------------------------------------
     def openTri(self):
+        self.triWindow = triPlaner.tri()
         self.triWindow.show()
 
 #--------------------------------------script over---------------------------------------------
