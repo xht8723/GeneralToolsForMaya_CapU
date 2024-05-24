@@ -6,6 +6,7 @@ import maya.cmds as cmds
 from . import utilities as ut
 from . import curves as cur
 from . import triPlaner
+from . import blendColor
 
 
 MESH = "mesh"  #maya node name const
@@ -25,6 +26,9 @@ class GTCapUmain(QtWidgets.QWidget):
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowStaysOnTopHint)
         
         #Widgets
+        self.blendColorBtn = QtWidgets.QPushButton('Blend Color set up')
+        self.blendColorBtn.released.connect(self.iniBlendColor)
+
         self.meshText = QtWidgets.QLabel("Select a mesh as point of interest: ")
         self.meshList = QtWidgets.QComboBox()
         self.meshList.setToolTip('What did the modeler say to the psychologist? \n"My life is a mesh!"')
@@ -65,6 +69,7 @@ class GTCapUmain(QtWidgets.QWidget):
         self.renameText = QtWidgets.QLabel("Rename the curve/empty (or leave it blank):")
         self.renameZeroOut = QtWidgets.QLineEdit()
         self.zeroOutButton = QtWidgets.QPushButton("Zero out selected object")
+        self.zeroOutButton.setToolTip('Rename the object to what you want on the left(or not), Parent the object to an empty')
         self.zeroOutButton.released.connect(self.sendRename)
 
         self.matchTransButton = QtWidgets.QPushButton("Match Transform")
@@ -268,7 +273,11 @@ class GTCapUmain(QtWidgets.QWidget):
         renameHlayout.addWidget(self.renameZeroOut, alignment = QtCore.Qt.AlignCenter)
         renameHlayout.addWidget(self.zeroOutButton, alignment = QtCore.Qt.AlignCenter)
         vRiggingLayout.addLayout(renameHlayout)
-        vRiggingLayout.addWidget(self.matchTransButton, alignment = QtCore.Qt.AlignCenter)
+
+        riggingLayout2 = QtWidgets.QHBoxLayout(alignment = QtCore.Qt.AlignCenter)
+        riggingLayout2.addWidget(self.matchTransButton, alignment = QtCore.Qt.AlignCenter)
+        riggingLayout2.addWidget(self.blendColorBtn, alignment = QtCore.Qt.AlignCenter)
+        vRiggingLayout.addLayout(riggingLayout2)
 
         riggingTab.setLayout(vRiggingLayout)
 
@@ -373,5 +382,12 @@ class GTCapUmain(QtWidgets.QWidget):
     def openTri(self):
         self.triWindow = triPlaner.tri()
         self.triWindow.show()
+        return
+
+    
+    def iniBlendColor(self):
+        self.BlendColorWin = blendColor.blendColors()
+        self.BlendColorWin.show()
+        return
 
 #--------------------------------------script over---------------------------------------------
