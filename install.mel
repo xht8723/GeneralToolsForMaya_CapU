@@ -1,1 +1,1 @@
-scriptToShelf ("GTools","from GTools import run\nimport imp\nimp.reload(run)", false);
+scriptToShelf ("GTools","from GeneralToolsForMaya_CapU import run\nimport imp\nimp.reload(run)", false);

@@ -16,5 +16,4 @@ def start():
     widget = GTCapU.GTCapUmain()
     widget.show()
 
-widget = GTCapU.GTCapUmain()
-widget.show()
+start()
